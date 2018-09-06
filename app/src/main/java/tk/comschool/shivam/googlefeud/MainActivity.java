@@ -1,9 +1,9 @@
+// Copyright by Shivam Jha, 2018
 package tk.comschool.shivam.googlefeud;
 
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             Toast.makeText(getApplicationContext(), "You used all your chances for this question, Tap a question category to get next question!", Toast.LENGTH_LONG).show();
-            return;
         }
     }
     @Override
