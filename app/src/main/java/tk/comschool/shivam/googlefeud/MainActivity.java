@@ -69,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void questionCategoryTapped(View view){
         leftChances = 3; //reset lives
-        findViewById(R.id.answerEditText).setEnabled(true);
+        EditText answerEditText = findViewById(R.id.answerEditText);
+        answerEditText.setEnabled(true);
+        answerEditText.setText("");
         Button questionCategory = (Button) view;
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
@@ -82,6 +84,18 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private void updateScoreBoard(){
+        TextView scoreTextView = findViewById(R.id.scoreTextView);
+        scoreTextView.setText("Score: " + Integer.toString(score));
+    }
+
+    public void resetButtonClicked(View view){
+        score = 0;
+        leftChances = 3;
+        updateScoreBoard();
+        TextView questionTextView = findViewById(R.id.questionTextView);
+        questionTextView.setText("");
     }
     public void submitButtonClicked(View view) {
         if (leftChances > 0) {
@@ -97,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject allanswerJSON = new JSONObject(str);
                     str = allanswerJSON.getString(questionTextView.getText().toString());
                     JSONArray answerArray = new JSONArray(str);
+                    int scoreAdder = 10000;
                     for (int i = 0; i < answerArray.length(); i++) {
                         if (answerArray.getString(i).equals(answerEditText.getText().toString().toLowerCase()))
                         {
@@ -104,9 +119,11 @@ public class MainActivity extends AppCompatActivity {
                             answerTextViewList.get(i).setText(answerArray.getString(i));
                             break;
                         }
+                        scoreAdder -= 1000;
                     }
                     if (answerMatched) {
-                        score++;
+                        score += scoreAdder;
+                        updateScoreBoard();
                         Toast.makeText(getApplicationContext(), "Correct!", Toast.LENGTH_SHORT).show();
                     } else {
                         leftChances--;
@@ -124,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+            answerEditText.setText("");
         } else {
             Toast.makeText(getApplicationContext(), "You used all your chances for this question, Tap a question category to get next question!", Toast.LENGTH_LONG).show();
         }
