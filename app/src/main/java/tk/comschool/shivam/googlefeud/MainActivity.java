@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     int score = 0, leftChances = 3;
     private String jsonData = "";
     public class DownloadJSONData extends AsyncTask<String, Void, String>{
+        // TODO: Make the class static (Just Needs some variable changes)
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -150,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         buttonArrayList.add((Button) findViewById(R.id.cultureButton));
         buttonArrayList.add((Button) findViewById(R.id.peopleButton));
         buttonArrayList.add((Button) findViewById(R.id.namesButton));
