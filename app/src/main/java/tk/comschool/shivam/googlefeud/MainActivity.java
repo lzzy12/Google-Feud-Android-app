@@ -1,6 +1,7 @@
 // Copyright by Shivam Jha, 2018
 package tk.comschool.shivam.googlefeud;
 
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -117,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < answerArray.length(); i++) {
                         if (answerArray.getString(i).equals(answerEditText.getText().toString().toLowerCase()))
                         {
+                            // Answer is correct
+                            MediaPlayer correctMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.correct);
+                            correctMediaPlayer.start();
                             answerMatched = true;
                             answerTextViewList.get(i).setText(answerArray.getString(i));
                             break;
@@ -129,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Correct!", Toast.LENGTH_SHORT).show();
                     } else {
                         leftChances--;
+                        MediaPlayer correctMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.wrong);
+                        correctMediaPlayer.start();
                         if (leftChances == 0){
                             Toast.makeText(getApplicationContext(), "You used all your chances for this question, Tap a question category to get next question!", Toast.LENGTH_LONG).show();
                             answerEditText.setEnabled(false);
