@@ -2,22 +2,19 @@
 package tk.comschool.shivam.googlefeud;
 
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,48 +24,6 @@ public class MainActivity extends AppCompatActivity {
     List<TextView> answerTextViewList = new ArrayList<>();
     int score = 0, leftChances = 3;
     private String jsonData = "";
-    public class DownloadJSONData extends AsyncTask<String, Void, String>{
-        // TODO: Make the class static (Just Needs some variable changes)
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            for(Button button : buttonArrayList){
-                button.setClickable(false);
-            }
-        }
-
-        @Override
-        protected String doInBackground(String... urls) {
-            URL url;
-            HttpURLConnection  httpURLConnection = null;
-            try {
-                url = new URL(urls[0]);
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = httpURLConnection.getInputStream();
-                InputStreamReader reader = new InputStreamReader(in);
-                int data = reader.read();
-                while(data != -1){
-                  jsonData += (char) data;
-                  data = reader.read();
-                }
-                return jsonData;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            for (Button button : buttonArrayList){
-                button.setClickable(true);
-            }
-            ProgressBar bar = findViewById(R.id.downloadProgressBar);
-            bar.setVisibility(View.INVISIBLE);
-        }
-    }
 
     public void questionCategoryTapped(View view){
         leftChances = 3; //reset lives
@@ -100,6 +55,21 @@ public class MainActivity extends AppCompatActivity {
         TextView questionTextView = findViewById(R.id.questionTextView);
         questionTextView.setText("");
     }
+
+    public void setJsonData() {
+        InputStream inputStream = this.getResources().openRawResource(R.raw.questions);
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferInput = new BufferedReader(inputStreamReader);
+        try{
+            String read;
+            while ((read = bufferInput.readLine()) != null){
+                jsonData += read;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void submitButtonClicked(View view) {
         if (leftChances > 0) {
             EditText answerEditText = findViewById(R.id.answerEditText);
@@ -174,15 +144,7 @@ public class MainActivity extends AppCompatActivity {
         answerTextViewList.add((TextView) findViewById(R.id.answerTextView8));
         answerTextViewList.add((TextView) findViewById(R.id.answerTextView9));
         answerTextViewList.add((TextView) findViewById(R.id.answerTextView10));
-
-        String jsonDataURL = "https://gist.github.com/lzzy12/55934307cac676bdec4fd6dced1a80c9/raw/1fc1e750550b78c459d03fa799698410b790450b/googlefeudQuestions.json";
-        DownloadJSONData downloadTask = new DownloadJSONData();
-        try {
-            downloadTask.execute(jsonDataURL);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        setJsonData();
     }
 }
 
